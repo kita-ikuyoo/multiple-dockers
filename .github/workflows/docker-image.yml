@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build test image
-      run: docker build -t react/test -f dockerfile.dev ./client
+      run: docker build -t react/test -f Dockerfile.dev ./client
     - name: Test
       run: docker run -e CI=true react/test npm test
 
