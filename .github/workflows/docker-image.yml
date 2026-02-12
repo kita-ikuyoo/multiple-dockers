@@ -16,18 +16,18 @@ jobs:
     - name: Test
       run: docker run -e CI=true react/test npm test
 
-    - run: docker build -t miku/frontend ./client
-    - run: docker build -t miku/backend ./server
-    - run: docker build -t miku/worker ./worker
-    - run: docker build -t miku/nginx ./nginx
+    - run: docker build -t miku0101/frontend ./client
+    - run: docker build -t miku0101/backend ./server
+    - run: docker build -t miku0101/worker ./worker
+    - run: docker build -t miku0101/nginx ./nginx
 
 
 
     - run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
-    - run: docker push miku/frontend
-    - run: docker push miku/backend
-    - run: docker push miku/worker
-    - run: docker push miku/nginx
+    - run: docker push miku0101/frontend
+    - run: docker push miku0101/backend
+    - run: docker push miku0101/worker
+    - run: docker push miku0101/nginx
 
     - name: generate deployment zip
       run: run -r deploy.zip . -x "*.git*"
