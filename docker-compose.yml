@@ -32,6 +32,14 @@ services:
         timeout: 5s
         retries: 5
       mem_limit: 128m
+      environment:
+        - REDIS_HOST=$REDIS_HOST
+        - REDIS_PORT=$REDIS_PORT
+        - PGUSER=$PGUSER
+        - PGHOST=$PGHOST
+        - PGDATABASE=$PGDATABASE
+        - PGPASSWORD=$PGPASSWORD
+        - PGPORT=$PGPORT
     worker:
       restart: on-failure
       image: miku0101/worker
@@ -39,3 +47,6 @@ services:
         - /usr/app/node_modules
         - ./worker:/usr/app
       mem_limit: 128m
+      environment:
+        - REDIS_HOST=$REDIS_HOST
+        - REDIS_PORT=$REDIS_PORT
