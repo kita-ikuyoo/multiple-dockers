@@ -11,9 +11,6 @@ services:
     frontend:
       restart: unless-stopped
       image: miku0101/frontend:IMAGE_TAG
-      volumes: 
-      - /usr/app/node_modules
-      - ./client:/usr/app
       healthcheck:
         test: ["CMD","curl","localhost:3000"]
         interval: 10s
@@ -23,9 +20,6 @@ services:
     backend:
       restart: unless-stopped
       image: miku0101/backend:IMAGE_TAG
-      volumes:
-        - /usr/app/node_modules
-        - ./server:/usr/app
       healthcheck:
         test: ["CMD","curl","localhost:5000"]
         interval: 10s
@@ -43,9 +37,6 @@ services:
     worker:
       restart: on-failure
       image: miku0101/worker:IMAGE_TAG
-      volumes:
-        - /usr/app/node_modules
-        - ./worker:/usr/app
       mem_limit: 128m
       environment:
         - REDIS_HOST=$REDIS_HOST
