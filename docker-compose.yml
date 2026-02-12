@@ -15,7 +15,7 @@ services:
       - /usr/app/node_modules
       - ./client:/usr/app
       healthcheck:
-        test: ["CMD","ping","localhost:3000"]
+        test: ["CMD","curl","localhost:3000"]
         interval: 10s
         timeout: 5s
         retries: 5
@@ -27,7 +27,7 @@ services:
         - /usr/app/node_modules
         - ./server:/usr/app
       healthcheck:
-        test: ["CMD","ping","localhost:5000"]
+        test: ["CMD","curl","localhost:5000"]
         interval: 10s
         timeout: 5s
         retries: 5

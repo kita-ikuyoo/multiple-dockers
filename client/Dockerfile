@@ -14,4 +14,6 @@ FROM nginx
 
 EXPOSE 3000
 
+COPY ./nginx/nginx.conf /etc/nginx/
+
 COPY --from=builder /usr/app/build /usr/share/nginx/html
