@@ -16,6 +16,8 @@ RUN npm run build
 
 EXPOSE 3000
 
+FROM node:16-alpine
+
 RUN npm install -g serve
 
 ENTRYPOINT [ "serve", "-s" ,"build" ]
