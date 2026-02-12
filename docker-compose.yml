@@ -4,13 +4,13 @@ services:
       depends_on:
         - frontend
         - backend
-      image: miku0101/nginx
+      image: miku0101/nginx:IMAGE_TAG
       ports:
         - 80:80
       mem_limit: 128m
     frontend:
       restart: unless-stopped
-      image: miku0101/frontend
+      image: miku0101/frontend:IMAGE_TAG
       volumes: 
       - /usr/app/node_modules
       - ./client:/usr/app
@@ -22,7 +22,7 @@ services:
       mem_limit: 128m
     backend:
       restart: unless-stopped
-      image: miku0101/backend
+      image: miku0101/backend:IMAGE_TAG
       volumes:
         - /usr/app/node_modules
         - ./server:/usr/app
@@ -42,7 +42,7 @@ services:
         - PGPORT=$PGPORT
     worker:
       restart: on-failure
-      image: miku0101/worker
+      image: miku0101/worker:IMAGE_TAG
       volumes:
         - /usr/app/node_modules
         - ./worker:/usr/app
