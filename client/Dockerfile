@@ -1,6 +1,4 @@
-# FROM node:lts-alpine AS builder
-
-FROM node:16-alpine
+FROM node:16-alpine AS builder
 
 WORKDIR /usr/app
 
