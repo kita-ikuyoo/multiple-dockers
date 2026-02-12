@@ -4,17 +4,13 @@ services:
       depends_on:
         - frontend
         - backend
-      build:
-        context: ./nginx
-        dockerfile: Dockerfile
+      image: miku0101/nginx
       ports:
         - 80:80
       mem_limit: 128m
     frontend:
       restart: unless-stopped
-      build:
-        context: ./client
-        dockerfile: Dockerfile
+      image: miku0101/frontend
       volumes: 
       - /usr/app/node_modules
       - ./client:/usr/app
@@ -26,9 +22,7 @@ services:
       mem_limit: 128m
     backend:
       restart: unless-stopped
-      build:
-        context: ./server
-        dockerfile: Dockerfile
+      image: miku0101/backend
       volumes:
         - /usr/app/node_modules
         - ./server:/usr/app
@@ -40,9 +34,7 @@ services:
       mem_limit: 128m
     worker:
       restart: on-failure
-      build:
-        context: ./worker
-        dockerfile: Dockerfile
+      image: miku0101/worker
       volumes:
         - /usr/app/node_modules
         - ./worker:/usr/app
