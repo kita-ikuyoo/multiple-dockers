@@ -30,7 +30,7 @@ jobs:
     - run: docker push miku0101/nginx
 
     - name: generate deployment zip
-      run: run -r deploy.zip . -x "*.git*"
+      run: zip -r deploy.zip . -x "*.git*"
       
       # - name: Deploy to EB
       #   uses: einaregilsson/beanstalk-deploy@v22
