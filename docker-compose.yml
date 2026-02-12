@@ -1,0 +1,61 @@
+services:
+    nginx:
+
+      restart: unless-stopped
+      depends_on:
+        - frontend
+        - backend
+      build:
+        context: ./nginx
+        dockerfile: Dockerfile.dev
+      ports:
+        - 80:80
+      mem_limit: 128m
+    frontend:
+      restart: unless-stopped
+      build:
+        context: ./client
+        dockerfile: Dockerfile.dev
+      volumes: 
+      - /usr/app/node_modules
+      - ./client:/usr/app
+      healthcheck:
+        test: ["CMD","ping","localhost:3000"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+      mem_limit: 128m
+    backend:
+      restart: unless-stopped
+      build:
+        context: ./server
+        dockerfile: Dockerfile.dev
+      volumes:
+        - /usr/app/node_modules
+        - ./server:/usr/app
+      healthcheck:
+        test: ["CMD","ping","localhost:5000"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+      mem_limit: 128m
+      environment:
+        - REDIS_HOST=redis
+        - REDIS_PORT=6379
+        - PGUSER=postgres
+        - PGHOST=postgres
+        - PGDATABASE=postgres
+        - PGPASSWORD=mysecretpassword
+        - PGPORT=5432
+    worker:
+      restart: on-failure
+      build:
+        context: ./worker
+        dockerfile: Dockerfile.dev
+      volumes:
+        - /usr/app/node_modules
+        - ./worker:/usr/app
+      mem_limit: 128m
+      environment:
+        - REDIS_HOST=redis
+        - REDIS_PORT=6379
