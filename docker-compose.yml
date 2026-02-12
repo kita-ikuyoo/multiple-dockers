@@ -39,14 +39,6 @@ services:
         timeout: 5s
         retries: 5
       mem_limit: 128m
-      environment:
-        - REDIS_HOST=redis
-        - REDIS_PORT=6379
-        - PGUSER=postgres
-        - PGHOST=postgres
-        - PGDATABASE=postgres
-        - PGPASSWORD=mysecretpassword
-        - PGPORT=5432
     worker:
       restart: on-failure
       build:
@@ -56,6 +48,3 @@ services:
         - /usr/app/node_modules
         - ./worker:/usr/app
       mem_limit: 128m
-      environment:
-        - REDIS_HOST=redis
-        - REDIS_PORT=6379
