@@ -1,13 +1,12 @@
 services:
     nginx:
-
       restart: unless-stopped
       depends_on:
         - frontend
         - backend
       build:
         context: ./nginx
-        dockerfile: Dockerfile.dev
+        dockerfile: Dockerfile
       ports:
         - 80:80
       mem_limit: 128m
@@ -15,7 +14,7 @@ services:
       restart: unless-stopped
       build:
         context: ./client
-        dockerfile: Dockerfile.dev
+        dockerfile: Dockerfile
       volumes: 
       - /usr/app/node_modules
       - ./client:/usr/app
@@ -29,7 +28,7 @@ services:
       restart: unless-stopped
       build:
         context: ./server
-        dockerfile: Dockerfile.dev
+        dockerfile: Dockerfile
       volumes:
         - /usr/app/node_modules
         - ./server:/usr/app
@@ -43,7 +42,7 @@ services:
       restart: on-failure
       build:
         context: ./worker
-        dockerfile: Dockerfile.dev
+        dockerfile: Dockerfile
       volumes:
         - /usr/app/node_modules
         - ./worker:/usr/app
