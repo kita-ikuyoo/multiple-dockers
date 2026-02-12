@@ -1,6 +1,10 @@
-FROM node:16-alpine AS builder
+# FROM node:lts-alpine AS builder
+
+FROM node:16-alpine
 
 WORKDIR /usr/app
+
+RUN apk add --no-cache curl
 
 COPY package.json .
 
@@ -10,10 +14,15 @@ COPY . .
 
 RUN npm run build
 
-FROM nginx
+# FROM nginx
 
 EXPOSE 3000
 
-COPY ./nginx/nginx.conf /etc/nginx/
+RUN npm install -g serve
 
-COPY --from=builder /usr/app/build /usr/share/nginx/html
+ENTRYPOINT [ "serve", "-s" ,"build" ]
+
+
+# COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+
+# COPY --from=builder /usr/app/build /usr/share/nginx/html

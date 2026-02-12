@@ -31,7 +31,7 @@ services:
       restart: unless-stopped
       build:
         context: ./client
-        dockerfile: Dockerfile.dev
+        dockerfile: Dockerfile
       volumes: 
       - /usr/app/node_modules
       - ./client:/usr/app
