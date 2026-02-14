@@ -29,47 +29,73 @@ pgClient.on('connect', (client) => {
     .catch((err) => console.error(err));
 });
 
-// Redis Client Setup
-const redis = require('redis');
-const redisClient = redis.createClient({
-  host: keys.redisHost,
-  port: keys.redisPort,
-  retry_strategy: () => 1000,
-});
+// Redis (ioredis) Setup
+const Redis = require('ioredis');
+
+const isProd = process.env.NODE_ENV === 'production';
+const redisPort = Number(keys.redisPort);
+
+// --- Option A: Redis Cluster (e.g., AWS ElastiCache cluster mode enabled) ---
+const redisClient = new Redis.Cluster(
+  [{ host: keys.redisHost, port: redisPort }],
+  {
+    dnsLookup: (address, callback) => callback(null, address),
+    redisOptions: isProd ? { tls: {} } : {},
+  }
+);
+
+// --- Option B: Single-node Redis (uncomment if you are NOT using cluster) ---
+// const redisClient = new Redis({
+//   host: keys.redisHost,
+//   port: redisPort,
+//   ...(isProd ? { tls: {} } : {}),
+// });
+
 const redisPublisher = redisClient.duplicate();
 
 // Express route handlers
-
 app.get('/', (req, res) => {
   res.send('Hi');
 });
 
 app.get('/values/all', async (req, res) => {
   const values = await pgClient.query('SELECT * from values');
-
   res.send(values.rows);
 });
 
 app.get('/values/current', async (req, res) => {
-  redisClient.hgetall('values', (err, values) => {
+  try {
+    // You are writing with HSET, so read with HGETALL
+    const values = await redisClient.hgetall('values');
+    console.log(values)
     res.send(values);
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Redis error');
+  }
 });
 
 app.post('/values', async (req, res) => {
   const index = req.body.index;
 
-  if (parseInt(index) > 40) {
+  if (parseInt(index, 10) > 40) {
     return res.status(422).send('Index too high');
   }
 
-  redisClient.hset('values', index, 'Nothing yet!');
-  redisPublisher.publish('insert', index);
-  pgClient.query('INSERT INTO values(number) VALUES($1)', [index]);
+  try {
+    // Keep write/publish/db insert consistent and await them
+    await redisClient.hset('values', index, 'Nothing yet!');
+    await redisPublisher.publish('insert', String(index));
+    console.log(index)
+    await pgClient.query('INSERT INTO values(number) VALUES($1)', [index]);
 
-  res.send({ working: true });
+    res.send({ working: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
 });
 
-app.listen(5000, (err) => {
+app.listen(5000, () => {
   console.log('Listening');
 });
