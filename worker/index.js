@@ -1,19 +1,33 @@
 const keys = require('./keys');
-const redis = require('redis');
+const Redis = require('ioredis');
 
-const redisClient = redis.createClient({
+// Main client (commands)
+const redisClient = new Redis({
   host: keys.redisHost,
   port: keys.redisPort,
-  retry_strategy: () => 1000,
+  // roughly similar to retry_strategy: () => 1000
+  retryStrategy: () => 1000,
 });
-const sub = redisClient.duplicate();
+
+// Separate connection for Pub/Sub (required in Redis clients)
+const sub = new Redis({
+  host: keys.redisHost,
+  port: keys.redisPort,
+  retryStrategy: () => 1000,
+});
 
 function fib(index) {
   if (index < 2) return 1;
   return fib(index - 1) + fib(index - 2);
 }
 
-sub.on('message', (channel, message) => {
-  redisClient.hset('values', message, fib(parseInt(message)));
+sub.on('message', async (channel, message) => {
+  const n = parseInt(message, 10);
+  await redisClient.hset('values', message, fib(n));
 });
+
 sub.subscribe('insert');
+
+// Optional: basic error logging
+redisClient.on('error', (err) => console.error('redisClient error:', err));
+sub.on('error', (err) => console.error('sub error:', err));
