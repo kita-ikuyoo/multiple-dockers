@@ -4,25 +4,12 @@ const Redis = require('ioredis');
 // Connect to the Redis Cluster.
 // AWS ElastiCache Cluster Mode usually provides a Configuration Endpoint.
 // We pass that endpoint here as the initial node.
+
 const redisClient = new Redis.Cluster(
-  [
-    {
-      host: keys.redisHost,
-      port: keys.redisPort,
-    },
-  ],
+  [{ host: keys.redisHost, port: redisPort }],
   {
-    // Retry strategy for cluster connection issues
-    clusterRetryStrategy: function (times) {
-      return 1000; // Retry every 1 second
-    },
-    // If your AWS Redis has Encryption in Transit (TLS) enabled, 
-    // you must uncomment the redisOptions block below:
-    
-    redisOptions: {
-      tls: {},
-    },
-    
+    dnsLookup: (address, callback) => callback(null, address),
+    redisOptions: isProd ? { tls: {} } : {},
   }
 );
 
