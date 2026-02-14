@@ -18,11 +18,11 @@ const redisClient = new Redis.Cluster(
     },
     // If your AWS Redis has Encryption in Transit (TLS) enabled, 
     // you must uncomment the redisOptions block below:
-    /*
+    
     redisOptions: {
       tls: {},
     },
-    */
+    
   }
 );
 
