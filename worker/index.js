@@ -6,7 +6,7 @@ const Redis = require('ioredis');
 // We pass that endpoint here as the initial node.
 
 const redisClient = new Redis.Cluster(
-  [{ host: keys.redisHost, port: redisPort }],
+  [{ host: keys.redisHost, port: keys.redisPort }],
   {
     dnsLookup: (address, callback) => callback(null, address),
     redisOptions: isProd ? { tls: {} } : {},
