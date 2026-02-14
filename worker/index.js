@@ -1,6 +1,6 @@
 const keys = require('./keys');
 const Redis = require('ioredis');
-
+const isProd = process.env.NODE_ENV === 'production';
 // Connect to the Redis Cluster.
 // AWS ElastiCache Cluster Mode usually provides a Configuration Endpoint.
 // We pass that endpoint here as the initial node.
