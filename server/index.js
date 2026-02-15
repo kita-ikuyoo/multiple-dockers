@@ -32,7 +32,6 @@ pgClient.on('connect', (client) => {
 // Redis (ioredis) Setup
 const Redis = require('ioredis');
 
-const isProd = process.env.NODE_ENV === 'production';
 
 
 // --- Option A: Redis Cluster (e.g., AWS ElastiCache cluster mode enabled) ---
@@ -40,7 +39,7 @@ const redisClient = new Redis.Cluster(
   [{ host: keys.redisHost, port: keys.redisPort }],
   {
     dnsLookup: (address, callback) => callback(null, address),
-    redisOptions: isProd ? { tls: {} } : {},
+    redisOptions: { tls: {} },
   }
 );
 

@@ -1,6 +1,5 @@
 const keys = require('./keys');
 const Redis = require('ioredis');
-const isProd = process.env.NODE_ENV === 'production';
 // Connect to the Redis Cluster.
 // AWS ElastiCache Cluster Mode usually provides a Configuration Endpoint.
 // We pass that endpoint here as the initial node.
@@ -9,7 +8,7 @@ const redisClient = new Redis.Cluster(
   [{ host: keys.redisHost, port: keys.redisPort }],
   {
     dnsLookup: (address, callback) => callback(null, address),
-    redisOptions: isProd ? { tls: {} } : {},
+    redisOptions:  { tls: {} },
   }
 );
 
@@ -28,4 +27,15 @@ sub.on('message', (channel, message) => {
   redisClient.hset('values', message, fib(parseInt(message)));
 });
 
-sub.subscribe('insert');
+sub.subscribe("insert", (err, count) => {
+  if (err) {
+    // Just like other commands, subscribe() can fail for some reasons,
+    // ex network issues.
+    console.error("Failed to subscribe: %s", err.message);
+  } else {
+    // `count` represents the number of channels this client are currently subscribed to.
+    console.log(
+      `Subscribed successfully! This client is currently subscribed to ${count} channels.`
+    );
+  }
+});
