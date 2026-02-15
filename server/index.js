@@ -85,7 +85,7 @@ app.post('/values', async (req, res) => {
   try {
     // Keep write/publish/db insert consistent and await them
     await redisClient.hset('values', index,'Nothing yet');
-    await redisPublisher.publish('insert', String(index));
+    await redisPublisher.publish('insert', index);
     console.log(index)
     await pgClient.query('INSERT INTO values(number) VALUES($1)', [index]);
 
