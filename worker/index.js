@@ -24,6 +24,7 @@ function fib(index) {
 
 sub.on('message', (channel, message) => {
   // ioredis supports the same hset signature (key, field, value)
+  console.log("Testtesttesttest")
   redisClient.hset('values', message, fib(parseInt(message)));
 });
 
