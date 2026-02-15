@@ -27,3 +27,5 @@ sub.on('message', (channel, message) => {
   console.log("Testtesttesttest")
   redisClient.hset('values', message, fib(parseInt(message)));
 });
+
+sub.subscribe('insert');

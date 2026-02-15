@@ -33,11 +33,11 @@ pgClient.on('connect', (client) => {
 const Redis = require('ioredis');
 
 const isProd = process.env.NODE_ENV === 'production';
-const redisPort = Number(keys.redisPort);
+
 
 // --- Option A: Redis Cluster (e.g., AWS ElastiCache cluster mode enabled) ---
 const redisClient = new Redis.Cluster(
-  [{ host: keys.redisHost, port: redisPort }],
+  [{ host: keys.redisHost, port: keys.redisPort }],
   {
     dnsLookup: (address, callback) => callback(null, address),
     redisOptions: isProd ? { tls: {} } : {},
@@ -84,7 +84,7 @@ app.post('/values', async (req, res) => {
 
   try {
     // Keep write/publish/db insert consistent and await them
-    await redisClient.hset('values', index,'Nothing yet');
+    await redisClient.hset('values', index, 'Nothing yet');
     await redisPublisher.publish('insert', index);
     console.log(index)
     await pgClient.query('INSERT INTO values(number) VALUES($1)', [index]);
