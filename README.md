@@ -27,8 +27,8 @@ They are easy to be understood, so I will skip them here.
 ## The architecture of the application 
 <img width="621" height="291" alt="Untitled Diagram drawio (1)" src="https://github.com/user-attachments/assets/39eec412-df56-44b7-a21a-84c3fda8c90d" />
 
-# How to use:
+# How to use
 Run the defined Github Action
 
-# To be done:
+# To be done
 Use terraform to standarlize the settings of cloud infrastructure.
