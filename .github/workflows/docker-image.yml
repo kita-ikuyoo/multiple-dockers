@@ -39,8 +39,8 @@ jobs:
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        application_name: multiple-dockers
-        environment_name: Multiple-dockers-env 
+        application_name: ${{secrets.EB_application_name}}
+        environment_name: ${{secrets.EB_environment_name}} 
         version_label: ${{ github.sha }}
         region: us-east-1
         deployment_package: deploy.zip

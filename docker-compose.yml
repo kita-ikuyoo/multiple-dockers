@@ -5,6 +5,7 @@ services:
         - frontend
         - backend
       image: $DOCKER_USERNAME/nginx:IMAGE_TAG
+      # IMAGE_TAG is used as a placeholder. It will then be replaced during Github Actions
       ports:
         - 80:80
       mem_limit: 128m
