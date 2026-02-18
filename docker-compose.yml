@@ -4,13 +4,13 @@ services:
       depends_on:
         - frontend
         - backend
-      image: miku0101/nginx:IMAGE_TAG
+      image: $DOCKER_USERNAME/nginx:IMAGE_TAG
       ports:
         - 80:80
       mem_limit: 128m
     frontend:
       restart: unless-stopped
-      image: miku0101/frontend:IMAGE_TAG
+      image: $DOCKER_USERNAME/frontend:IMAGE_TAG
       healthcheck:
         test: ["CMD","curl","localhost:3000"]
         interval: 10s
@@ -19,7 +19,7 @@ services:
       mem_limit: 128m
     backend:
       restart: unless-stopped
-      image: miku0101/backend:IMAGE_TAG
+      image: $DOCKER_USERNAME/backend:IMAGE_TAG
       healthcheck:
         test: ["CMD","curl","localhost:5000"]
         interval: 10s
@@ -36,7 +36,7 @@ services:
         - PGPORT=$PGPORT
     worker:
       restart: on-failure
-      image: miku0101/worker:IMAGE_TAG
+      image: $DOCKER_USERNAME/worker:IMAGE_TAG
       mem_limit: 128m
       environment:
         - REDIS_HOST=$REDIS_HOST

@@ -16,18 +16,18 @@ jobs:
     - name: Test
       run: docker run -e CI=true react/test npm test
 
-    - run: docker build -t miku0101/frontend:${{github.sha}} ./client
-    - run: docker build -t miku0101/backend:${{github.sha}} ./server
-    - run: docker build -t miku0101/worker:${{github.sha}} ./worker
-    - run: docker build -t miku0101/nginx:${{github.sha}} ./nginx
+    - run: docker build -t ${{secrets.DOCKER_USERNAME}}/frontend:${{github.sha}} ./client
+    - run: docker build -t ${{secrets.DOCKER_USERNAME}}/backend:${{github.sha}} ./server
+    - run: docker build -t ${{secrets.DOCKER_USERNAME}}/worker:${{github.sha}} ./worker
+    - run: docker build -t ${{secrets.DOCKER_USERNAME}}/nginx:${{github.sha}} ./nginx
 
 
 
     - run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
-    - run: docker push miku0101/frontend:${{github.sha}}
-    - run: docker push miku0101/backend:${{github.sha}}
-    - run: docker push miku0101/worker:${{github.sha}}
-    - run: docker push miku0101/nginx:${{github.sha}}
+    - run: docker push ${{secrets.DOCKER_USERNAME}}/frontend:${{github.sha}}
+    - run: docker push ${{secrets.DOCKER_USERNAME}}/backend:${{github.sha}}
+    - run: docker push ${{secrets.DOCKER_USERNAME}}/worker:${{github.sha}}
+    - run: docker push ${{secrets.DOCKER_USERNAME}}/nginx:${{github.sha}}
 
     - run: sed -i "s/IMAGE_TAG/${{ github.sha }}/g" docker-compose.yml
 
